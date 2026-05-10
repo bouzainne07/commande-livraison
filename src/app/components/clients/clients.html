@@ -1,0 +1,54 @@
+<div class="container">
+  <h2>Gestion des Clients</h2>
+
+  <!-- Message de confirmation -->
+  <div class="alert" *ngIf="message">{{ message }}</div>
+
+  <!-- Formulaire d'ajout -->
+  <div class="card">
+    <h3>Ajouter un client</h3>
+    <input [(ngModel)]="newClient.nom" placeholder="Nom" />
+    <input [(ngModel)]="newClient.email" placeholder="Email" />
+    <input [(ngModel)]="newClient.adresse" placeholder="Adresse" />
+    <input [(ngModel)]="newClient.telephone" placeholder="Téléphone" />
+    <button (click)="createClient()">Ajouter</button>
+  </div>
+
+  <!-- Formulaire de modification -->
+  <div class="card edit" *ngIf="editingClient">
+    <h3>Modifier le client</h3>
+    <input [(ngModel)]="editingClient.nom" placeholder="Nom" />
+    <input [(ngModel)]="editingClient.email" placeholder="Email" />
+    <input [(ngModel)]="editingClient.adresse" placeholder="Adresse" />
+    <input [(ngModel)]="editingClient.telephone" placeholder="Téléphone" />
+    <button (click)="updateClient()">Sauvegarder</button>
+    <button (click)="editingClient = null">Annuler</button>
+  </div>
+
+  <!-- Tableau des clients -->
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Adresse</th>
+        <th>Téléphone</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let client of clients">
+        <td>{{ client.id }}</td>
+        <td>{{ client.nom }}</td>
+        <td>{{ client.email }}</td>
+        <td>{{ client.adresse }}</td>
+        <td>{{ client.telephone }}</td>
+        <td>
+          <button (click)="editClient(client)">Modifier</button>
+          <button (click)="deleteClient(client.id!)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

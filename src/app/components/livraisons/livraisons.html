@@ -1,0 +1,40 @@
+<div class="container">
+  <h2>Gestion des Livraisons</h2>
+  <div class="alert" *ngIf="message">{{ message }}</div>
+
+  <div class="card">
+    <h3>Créer une livraison</h3>
+    <select [(ngModel)]="selectedCommandeId">
+      <option value="0">-- Sélectionne une commande --</option>
+      <option *ngFor="let c of commandes" [value]="c.id">Commande #{{ c.id }}</option>
+    </select>
+    <select [(ngModel)]="selectedTransporteurId">
+      <option value="0">-- Sélectionne un transporteur --</option>
+      <option *ngFor="let t of transporteurs" [value]="t.id">{{ t.nom }}</option>
+    </select>
+    <button (click)="create()">Créer</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Commande</th><th>Transporteur</th><th>Statut</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let l of livraisons">
+        <td>{{ l.id }}</td>
+        <td>Commande #{{ l.commande?.id }}</td>
+        <td>{{ l.transporteur?.id || 'Non assigné' }}</td>
+        <td>
+          <select [(ngModel)]="l.statut" (change)="updateStatut(l.id!, l.statut!)">
+            <option *ngFor="let s of statutOptions" [value]="s">{{ s }}</option>
+          </select>
+        </td>
+        <td>
+          <button (click)="delete(l.id!)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

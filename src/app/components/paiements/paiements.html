@@ -1,0 +1,37 @@
+<div class="container">
+  <h2>Gestion des Paiements</h2>
+  <div class="alert" *ngIf="message">{{ message }}</div>
+
+  <div class="card">
+    <h3>Créer un paiement</h3>
+    <select [(ngModel)]="selectedCommandeId">
+      <option value="0">-- Sélectionne une commande --</option>
+      <option *ngFor="let c of commandes" [value]="c.id">Commande #{{ c.id }}</option>
+    </select>
+    <select [(ngModel)]="selectedMode">
+      <option *ngFor="let m of modeOptions" [value]="m">{{ m }}</option>
+    </select>
+    <button (click)="create()">Créer</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Commande</th><th>Mode</th><th>Statut</th><th>Date</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of paiements">
+        <td>{{ p.id }}</td>
+        <td>Commande #{{ p.commande?.id }}</td>
+        <td>{{ p.mode }}</td>
+        <td>{{ p.statut }}</td>
+        <td>{{ p.datePaiement | date:'dd/MM/yyyy' }}</td>
+        <td>
+          <button (click)="valider(p.id!)" *ngIf="p.statut !== 'PAYE'">Valider</button>
+          <button (click)="delete(p.id!)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

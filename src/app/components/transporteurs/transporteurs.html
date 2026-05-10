@@ -1,0 +1,41 @@
+<div class="container">
+  <h2>Gestion des Transporteurs</h2>
+  <div class="alert" *ngIf="message">{{ message }}</div>
+
+  <div class="card">
+    <h3>Ajouter un transporteur</h3>
+    <input [(ngModel)]="newTransporteur.nom" placeholder="Nom" />
+    <input [(ngModel)]="newTransporteur.telephone" placeholder="Téléphone" />
+    <input [(ngModel)]="newTransporteur.note" placeholder="Note (0-5)" type="number" />
+    <button (click)="create()">Ajouter</button>
+  </div>
+
+  <div class="card edit" *ngIf="editingTransporteur">
+    <h3>Modifier</h3>
+    <input [(ngModel)]="editingTransporteur.nom" placeholder="Nom" />
+    <input [(ngModel)]="editingTransporteur.telephone" placeholder="Téléphone" />
+    <input [(ngModel)]="editingTransporteur.note" placeholder="Note" type="number" />
+    <button (click)="update()">Sauvegarder</button>
+    <button (click)="editingTransporteur = null">Annuler</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th><th>Nom</th><th>Téléphone</th><th>Note</th><th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of transporteurs">
+        <td>{{ t.id }}</td>
+        <td>{{ t.nom }}</td>
+        <td>{{ t.telephone }}</td>
+        <td>{{ t.note }}/5</td>
+        <td>
+          <button (click)="edit(t)">Modifier</button>
+          <button (click)="delete(t.id!)">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
