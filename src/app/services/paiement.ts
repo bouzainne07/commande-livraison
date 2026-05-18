@@ -13,7 +13,7 @@ export interface Paiement {
 @Injectable({ providedIn: 'root' })
 export class PaiementService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/paiements';
+  private apiUrl = 'https://commande-livraison-production.up.railway.app/api/paiements';
 
   getAll(): Observable<Paiement[]> {
     return this.http.get<Paiement[]>(this.apiUrl);

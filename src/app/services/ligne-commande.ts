@@ -13,7 +13,7 @@ export interface LigneCommande {
 @Injectable({ providedIn: 'root' })
 export class LigneCommandeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/lignes-commande';
+  private apiUrl = 'https://commande-livraison-production.up.railway.app/api/lignes-commande';
 
   getByCommande(commandeId: number): Observable<LigneCommande[]> {
     return this.http.get<LigneCommande[]>(`${this.apiUrl}/commande/${commandeId}`);

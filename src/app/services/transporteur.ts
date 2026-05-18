@@ -12,7 +12,7 @@ export interface Transporteur {
 @Injectable({ providedIn: 'root' })
 export class TransporteurService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/transporteurs';
+  private apiUrl = 'https://commande-livraison-production.up.railway.app/api/transporteurs';
 
   getAll(): Observable<Transporteur[]> {
     return this.http.get<Transporteur[]>(this.apiUrl);

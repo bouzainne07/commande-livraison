@@ -14,7 +14,7 @@ export interface Livraison {
 @Injectable({ providedIn: 'root' })
 export class LivraisonService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/livraisons';
+  private apiUrl = 'https://commande-livraison-production.up.railway.app/api/livraisons';
 
   getAll(): Observable<Livraison[]> {
     return this.http.get<Livraison[]>(this.apiUrl);

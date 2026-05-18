@@ -19,7 +19,7 @@ export class ClientService {
   private http = inject(HttpClient);
 
   // L'adresse de ton API Spring Boot
-  private apiUrl = 'http://localhost:8080/api/clients';
+  private apiUrl = 'https://commande-livraison-production.up.railway.app/api/clients';
 
   // GET tous les clients
   getAll(): Observable<Client[]> {
