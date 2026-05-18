@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface Commande {
   id?: number;
-  client: { id: number };
+  client: { id: number; nom?: string };
   dateCommande?: string;
   statut?: string;
   montantTotal?: number;
@@ -37,5 +37,9 @@ export class CommandeService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  recalculerMontant(id: number): Observable<Commande> {
+    return this.http.put<Commande>(`${this.apiUrl}/${id}/recalculer`, {});
   }
 }

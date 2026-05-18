@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 export interface Livraison {
   id?: number;
   commande: { id: number };
-  transporteur?: { id: number };
+  transporteur?: { id: number; nom?: string };
   dateLivraison?: string;
   cout?: number;
   statut?: string;

@@ -19,7 +19,7 @@ export class CommandesComponent implements OnInit {
   clients: Client[] = [];
   selectedClientId: number = 0;
   message = '';
-
+  loading = false;
   statutOptions = ['EN_ATTENTE', 'VALIDEE', 'EN_LIVRAISON', 'LIVREE', 'ANNULEE'];
 
   ngOnInit(): void {
@@ -28,7 +28,11 @@ export class CommandesComponent implements OnInit {
   }
 
   load(): void {
-    this.commandeService.getAll().subscribe(data => this.commandes = data);
+    this.loading = true;
+    this.commandeService.getAll().subscribe({
+      next: data => { this.commandes = data; this.loading = false; },
+      error: () => { this.loading = false; }
+    });
   }
 
   create(): void {
@@ -37,20 +41,23 @@ export class CommandesComponent implements OnInit {
     this.commandeService.create(commande).subscribe(() => {
       this.message = 'Commande créée !';
       this.selectedClientId = 0;
-      this.load();
+      setTimeout(() => this.load(), 500);
     });
   }
 
   updateStatut(id: number, statut: string): void {
     this.commandeService.updateStatut(id, statut).subscribe(() => {
       this.message = 'Statut mis à jour !';
-      this.load();
+      setTimeout(() => this.load(), 500);
     });
   }
 
   delete(id: number): void {
     if (confirm('Supprimer ?')) {
-      this.commandeService.delete(id).subscribe(() => { this.message = 'Supprimée !'; this.load(); });
+      this.commandeService.delete(id).subscribe(() => {
+        this.message = 'Supprimée !';
+        setTimeout(() => this.load(), 500);
+      });
     }
   }
 }

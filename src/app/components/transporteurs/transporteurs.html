@@ -19,7 +19,9 @@
     <button (click)="editingTransporteur = null">Annuler</button>
   </div>
 
-  <table>
+  <div class="loading" *ngIf="loading">⏳ Chargement...</div>
+
+  <table *ngIf="!loading">
     <thead>
       <tr>
         <th>ID</th><th>Nom</th><th>Téléphone</th><th>Note</th><th>Actions</th>
@@ -38,4 +40,6 @@
       </tr>
     </tbody>
   </table>
+
+  <p *ngIf="!loading && transporteurs.length === 0">Aucun transporteur trouvé.</p>
 </div>

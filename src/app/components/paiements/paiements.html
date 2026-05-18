@@ -14,7 +14,9 @@
     <button (click)="create()">Créer</button>
   </div>
 
-  <table>
+  <div class="loading" *ngIf="loading">⏳ Chargement...</div>
+
+  <table *ngIf="!loading">
     <thead>
       <tr>
         <th>ID</th><th>Commande</th><th>Mode</th><th>Statut</th><th>Date</th><th>Actions</th>
@@ -23,7 +25,7 @@
     <tbody>
       <tr *ngFor="let p of paiements">
         <td>{{ p.id }}</td>
-        <td>Commande #{{ p.commande?.id }}</td>
+        <td>Commande #{{ p.commande.id }}</td>
         <td>{{ p.mode }}</td>
         <td>{{ p.statut }}</td>
         <td>{{ p.datePaiement | date:'dd/MM/yyyy' }}</td>
@@ -34,4 +36,6 @@
       </tr>
     </tbody>
   </table>
+
+  <p *ngIf="!loading && paiements.length === 0">Aucun paiement trouvé.</p>
 </div>

@@ -15,7 +15,9 @@
     <button (click)="create()">Créer</button>
   </div>
 
-  <table>
+  <div class="loading" *ngIf="loading">⏳ Chargement...</div>
+
+  <table *ngIf="!loading">
     <thead>
       <tr>
         <th>ID</th><th>Commande</th><th>Transporteur</th><th>Statut</th><th>Actions</th>
@@ -24,8 +26,8 @@
     <tbody>
       <tr *ngFor="let l of livraisons">
         <td>{{ l.id }}</td>
-        <td>Commande #{{ l.commande?.id }}</td>
-        <td>{{ l.transporteur?.id || 'Non assigné' }}</td>
+        <td>Commande #{{ l.commande.id }}</td>
+        <td>{{ l.transporteur ? 'Transporteur #' + l.transporteur.id : 'Non assigné' }}</td>
         <td>
           <select [(ngModel)]="l.statut" (change)="updateStatut(l.id!, l.statut!)">
             <option *ngFor="let s of statutOptions" [value]="s">{{ s }}</option>
@@ -37,4 +39,6 @@
       </tr>
     </tbody>
   </table>
+
+  <p *ngIf="!loading && livraisons.length === 0">Aucune livraison trouvée.</p>
 </div>

@@ -1,10 +1,8 @@
 <div class="container">
   <h2>Gestion des Clients</h2>
 
-  <!-- Message de confirmation -->
   <div class="alert" *ngIf="message">{{ message }}</div>
 
-  <!-- Formulaire d'ajout -->
   <div class="card">
     <h3>Ajouter un client</h3>
     <input [(ngModel)]="newClient.nom" placeholder="Nom" />
@@ -14,7 +12,6 @@
     <button (click)="createClient()">Ajouter</button>
   </div>
 
-  <!-- Formulaire de modification -->
   <div class="card edit" *ngIf="editingClient">
     <h3>Modifier le client</h3>
     <input [(ngModel)]="editingClient.nom" placeholder="Nom" />
@@ -25,16 +22,18 @@
     <button (click)="editingClient = null">Annuler</button>
   </div>
 
-  <!-- Tableau des clients -->
-  <table>
+  <div *ngIf="loading" style="text-align:center; padding:20px; color:#3f51b5;">
+    ⏳ Chargement...
+  </div>
+
+  <div *ngIf="!loading && clients.length === 0" style="text-align:center; padding:20px; color:red;">
+    ❌ Aucun client trouvé — vérifie que Spring Boot tourne sur le port 8080
+  </div>
+
+  <table *ngIf="!loading && clients.length > 0">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Nom</th>
-        <th>Email</th>
-        <th>Adresse</th>
-        <th>Téléphone</th>
-        <th>Actions</th>
+        <th>ID</th><th>Nom</th><th>Email</th><th>Adresse</th><th>Téléphone</th><th>Actions</th>
       </tr>
     </thead>
     <tbody>

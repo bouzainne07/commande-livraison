@@ -11,21 +11,23 @@ import { Client, ClientService } from '../../services/client';
   styleUrl: './clients.css'
 })
 export class ClientsComponent implements OnInit {
-
   private clientService = inject(ClientService);
 
-  clients: Client[] = [];        // liste des clients
+  clients: Client[] = [];
   newClient: Client = { nom: '', email: '', adresse: '', telephone: '' };
   editingClient: Client | null = null;
   message = '';
+  loading = false;
 
   ngOnInit(): void {
-    this.loadClients();   // charge les clients au démarrage
+    this.loadClients();
   }
 
   loadClients(): void {
-    this.clientService.getAll().subscribe(data => {
-      this.clients = data;
+    this.loading = true;
+    this.clientService.getAll().subscribe({
+      next: (data) => { this.clients = data; this.loading = false; },
+      error: (err) => { console.error('Erreur:', err); this.loading = false; }
     });
   }
 
@@ -33,12 +35,12 @@ export class ClientsComponent implements OnInit {
     this.clientService.create(this.newClient).subscribe(() => {
       this.message = 'Client créé avec succès !';
       this.newClient = { nom: '', email: '', adresse: '', telephone: '' };
-      this.loadClients();
+      setTimeout(() => this.loadClients(), 500);
     });
   }
 
   editClient(client: Client): void {
-    this.editingClient = { ...client };  // copie le client pour l'édition
+    this.editingClient = { ...client };
   }
 
   updateClient(): void {
@@ -46,7 +48,7 @@ export class ClientsComponent implements OnInit {
       this.clientService.update(this.editingClient.id, this.editingClient).subscribe(() => {
         this.message = 'Client modifié !';
         this.editingClient = null;
-        this.loadClients();
+        setTimeout(() => this.loadClients(), 500);
       });
     }
   }
@@ -55,7 +57,7 @@ export class ClientsComponent implements OnInit {
     if (confirm('Supprimer ce client ?')) {
       this.clientService.delete(id).subscribe(() => {
         this.message = 'Client supprimé !';
-        this.loadClients();
+        setTimeout(() => this.loadClients(), 500);
       });
     }
   }

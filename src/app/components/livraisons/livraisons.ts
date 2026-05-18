@@ -23,6 +23,7 @@ export class LivraisonsComponent implements OnInit {
   selectedCommandeId: number = 0;
   selectedTransporteurId: number = 0;
   message = '';
+  loading = false;
   statutOptions = ['EN_ATTENTE', 'EN_COURS', 'LIVREE', 'ECHEC'];
 
   ngOnInit(): void {
@@ -32,7 +33,11 @@ export class LivraisonsComponent implements OnInit {
   }
 
   load(): void {
-    this.livraisonService.getAll().subscribe(data => this.livraisons = data);
+    this.loading = true;
+    this.livraisonService.getAll().subscribe({
+      next: data => { this.livraisons = data; this.loading = false; },
+      error: () => { this.loading = false; }
+    });
   }
 
   create(): void {
@@ -43,20 +48,23 @@ export class LivraisonsComponent implements OnInit {
     };
     this.livraisonService.create(livraison).subscribe(() => {
       this.message = 'Livraison créée !';
-      this.load();
+      setTimeout(() => this.load(), 500);
     });
   }
 
   updateStatut(id: number, statut: string): void {
     this.livraisonService.updateStatut(id, statut).subscribe(() => {
       this.message = 'Statut mis à jour !';
-      this.load();
+      setTimeout(() => this.load(), 500);
     });
   }
 
   delete(id: number): void {
     if (confirm('Supprimer ?')) {
-      this.livraisonService.delete(id).subscribe(() => { this.message = 'Supprimée !'; this.load(); });
+      this.livraisonService.delete(id).subscribe(() => {
+        this.message = 'Supprimée !';
+        setTimeout(() => this.load(), 500);
+      });
     }
   }
 }

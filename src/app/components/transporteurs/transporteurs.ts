@@ -17,18 +17,25 @@ export class TransporteursComponent implements OnInit {
   newTransporteur: Transporteur = { nom: '', telephone: '', note: 0 };
   editingTransporteur: Transporteur | null = null;
   message = '';
+  loading = false;
 
-  ngOnInit(): void { this.load(); }
+  ngOnInit(): void {
+    this.load();
+  }
 
   load(): void {
-    this.transporteurService.getAll().subscribe(data => this.transporteurs = data);
+    this.loading = true;
+    this.transporteurService.getAll().subscribe({
+      next: data => { this.transporteurs = data; this.loading = false; },
+      error: () => { this.loading = false; }
+    });
   }
 
   create(): void {
     this.transporteurService.create(this.newTransporteur).subscribe(() => {
       this.message = 'Transporteur ajouté !';
       this.newTransporteur = { nom: '', telephone: '', note: 0 };
-      this.load();
+      setTimeout(() => this.load(), 500);
     });
   }
 
@@ -39,14 +46,17 @@ export class TransporteursComponent implements OnInit {
       this.transporteurService.update(this.editingTransporteur.id, this.editingTransporteur).subscribe(() => {
         this.message = 'Transporteur modifié !';
         this.editingTransporteur = null;
-        this.load();
+        setTimeout(() => this.load(), 500);
       });
     }
   }
 
   delete(id: number): void {
     if (confirm('Supprimer ?')) {
-      this.transporteurService.delete(id).subscribe(() => { this.message = 'Supprimé !'; this.load(); });
+      this.transporteurService.delete(id).subscribe(() => {
+        this.message = 'Supprimé !';
+        setTimeout(() => this.load(), 500);
+      });
     }
   }
 }

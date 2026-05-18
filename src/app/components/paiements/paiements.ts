@@ -20,6 +20,7 @@ export class PaiementsComponent implements OnInit {
   selectedCommandeId: number = 0;
   selectedMode: string = 'CARTE';
   message = '';
+  loading = false;
   modeOptions = ['CARTE', 'VIREMENT', 'ESPECES', 'CHEQUE'];
 
   ngOnInit(): void {
@@ -28,7 +29,11 @@ export class PaiementsComponent implements OnInit {
   }
 
   load(): void {
-    this.paiementService.getAll().subscribe(data => this.paiements = data);
+    this.loading = true;
+    this.paiementService.getAll().subscribe({
+      next: data => { this.paiements = data; this.loading = false; },
+      error: () => { this.loading = false; }
+    });
   }
 
   create(): void {
@@ -39,20 +44,23 @@ export class PaiementsComponent implements OnInit {
     };
     this.paiementService.create(paiement).subscribe(() => {
       this.message = 'Paiement créé !';
-      this.load();
+      setTimeout(() => this.load(), 500);
     });
   }
 
   valider(id: number): void {
     this.paiementService.valider(id).subscribe(() => {
       this.message = 'Paiement validé !';
-      this.load();
+      setTimeout(() => this.load(), 500);
     });
   }
 
   delete(id: number): void {
     if (confirm('Supprimer ?')) {
-      this.paiementService.delete(id).subscribe(() => { this.message = 'Supprimé !'; this.load(); });
+      this.paiementService.delete(id).subscribe(() => {
+        this.message = 'Supprimé !';
+        setTimeout(() => this.load(), 500);
+      });
     }
   }
 }

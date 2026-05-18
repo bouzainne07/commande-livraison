@@ -1,0 +1,56 @@
+<div class="container">
+  <h2>Lignes de Commande</h2>
+  <div class="alert" *ngIf="message">{{ message }}</div>
+
+  <!-- Sélection commande -->
+  <div class="card">
+    <h3>Sélectionne une commande</h3>
+    <select [(ngModel)]="selectedCommandeId" (change)="loadLignes()">
+      <option value="0">-- Sélectionne une commande --</option>
+      <option *ngFor="let c of commandes" [value]="c.id">
+        Commande #{{ c.id }} — {{ c.statut }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Formulaire ajout ligne -->
+  <div class="card" *ngIf="selectedCommandeId > 0">
+    <h3>Ajouter un produit</h3>
+    <input [(ngModel)]="newLigne.produit" placeholder="Nom du produit" />
+    <input [(ngModel)]="newLigne.quantite" type="number" placeholder="Quantité" min="1" />
+    <input [(ngModel)]="newLigne.prixUnitaire" type="number" placeholder="Prix unitaire (DT)" />
+    <button (click)="create()">Ajouter</button>
+  </div>
+
+  <!-- Tableau des lignes -->
+  <table *ngIf="lignes.length > 0">
+    <thead>
+      <tr>
+        <th>Produit</th>
+        <th>Quantité</th>
+        <th>Prix unitaire</th>
+        <th>Sous-total</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let l of lignes">
+        <td>{{ l.produit }}</td>
+        <td>{{ l.quantite }}</td>
+        <td>{{ l.prixUnitaire }} DT</td>
+        <td>{{ l.quantite * l.prixUnitaire }} DT</td>
+        <td><button (click)="delete(l.id!)">Supprimer</button></td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="3"><strong>Total</strong></td>
+        <td colspan="2"><strong>{{ total }} DT</strong></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <p *ngIf="selectedCommandeId > 0 && lignes.length === 0">
+    Aucun produit dans cette commande.
+  </p>
+</div>
