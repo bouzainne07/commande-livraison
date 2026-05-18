@@ -3,7 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Data
 @Entity
 @Table(name = "livraisons")
@@ -13,9 +13,10 @@ public class Livraison {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Une livraison est liée à UNE commande
+ // Une livraison est liée à UNE commande
     @OneToOne
     @JoinColumn(name = "commande_id", nullable = false)
+    @JsonIgnoreProperties({"lignes", "livraison"})
     private Commande commande;
 
     // Une livraison est assurée par UN transporteur

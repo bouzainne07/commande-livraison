@@ -61,5 +61,11 @@ public class CommandeController {
     public ResponseEntity<Void> deleteCommande(@PathVariable Long id) {
         commandeService.deleteCommande(id);
         return ResponseEntity.ok().build();
+    }public CommandeController() {
+		// TODO Auto-generated constructor stub
+	}
+    @PutMapping("/{id}/recalculer")
+    public ResponseEntity<Commande> recalculer(@PathVariable Long id) {
+        return ResponseEntity.ok(commandeService.recalculerMontant(id));
     }
 }

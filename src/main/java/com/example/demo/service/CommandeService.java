@@ -42,4 +42,15 @@ public class CommandeService {
     public void deleteCommande(Long id) {
         commandeRepository.deleteById(id);
     }
+ // Recalcule le montant total d'une commande
+ 
+    public Commande recalculerMontant(Long commandeId) {
+        Commande commande = commandeRepository.findById(commandeId)
+            .orElseThrow(() -> new RuntimeException("Commande non trouvée"));
+        double total = commande.getLignes().stream()
+            .mapToDouble(l -> l.getQuantite() * l.getPrixUnitaire())
+            .sum();
+        commande.setMontantTotal(total);
+        return commandeRepository.save(commande);
+    }
 }

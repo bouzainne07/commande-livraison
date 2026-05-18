@@ -1,25 +1,31 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
-@Data               // Lombok : génère automatiquement les getters, setters, toString
-@Entity             // Dit à Spring : "cette classe = une table dans la base de données"
-@Table(name = "clients")  // Le nom de la table dans MySQL sera "clients"
+@Data
+@Entity
+@Table(name = "clients")
 public class Client {
 
-    @Id                                        // C'est la clé primaire (l'identifiant unique)
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // L'id s'incrémente automatiquement (1, 2, 3...)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)                  // Ce champ est obligatoire (ne peut pas être vide)
+    @NotBlank(message = "Le nom est obligatoire")
+    @Size(min = 2, max = 50, message = "Le nom doit avoir entre 2 et 50 caractères")
+    @Column(nullable = false)
     private String nom;
 
-    @Column(nullable = false, unique = true)   // Email obligatoire ET unique (pas deux fois le même)
+    @NotBlank(message = "L'email est obligatoire")
+    @Email(message = "L'email doit être valide")
+    @Column(nullable = false, unique = true)
     private String email;
 
     private String adresse;
 
+    @Pattern(regexp = "^[0-9]{8}$", message = "Le téléphone doit avoir 8 chiffres")
     @Column(name = "telephone")
     private String telephone;
 }

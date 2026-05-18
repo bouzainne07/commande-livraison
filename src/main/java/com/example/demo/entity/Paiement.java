@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @Entity
@@ -15,6 +16,7 @@ public class Paiement {
 
     @OneToOne
     @JoinColumn(name = "commande_id", nullable = false)
+    @JsonIgnoreProperties({"lignes", "paiement"})  // ← remplace @JsonIgnore
     private Commande commande;
 
     @Column(name = "date_paiement")

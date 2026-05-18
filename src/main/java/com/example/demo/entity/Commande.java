@@ -1,9 +1,11 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Data
 @Entity
@@ -14,24 +16,23 @@ public class Commande {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relation : plusieurs commandes peuvent appartenir à UN client
-    // @ManyToOne = "plusieurs commandes → un client"
+    @NotNull(message = "Le client est obligatoire")
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = false) // crée une colonne "client_id" dans la table
+    @JoinColumn(name = "client_id", nullable = false)
+    @JsonIgnoreProperties("commandes")
     private Client client;
 
     @Column(name = "date_commande")
-    private LocalDateTime dateCommande = LocalDateTime.now(); // date automatique à la création
+    private LocalDateTime dateCommande = LocalDateTime.now();
 
-    // Statut : EN_ATTENTE, VALIDEE, LIVREE, ANNULEE
-    @Enumerated(EnumType.STRING) // stocke le texte "EN_ATTENTE" et non un chiffre
+    @Enumerated(EnumType.STRING)
     private StatutCommande statut = StatutCommande.EN_ATTENTE;
 
+    @PositiveOrZero(message = "Le montant ne peut pas être négatif")
     @Column(name = "montant_total")
     private Double montantTotal = 0.0;
 
-    // Une commande a PLUSIEURS lignes de commande
-    // @OneToMany = "une commande → plusieurs lignes"
-    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("commande")
     private List<LigneCommande> lignes;
 }

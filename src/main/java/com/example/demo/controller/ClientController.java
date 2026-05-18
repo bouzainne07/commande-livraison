@@ -2,26 +2,28 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Client;
 import com.example.demo.service.ClientService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@RestController                    // Dit à Spring : "cette classe répond aux requêtes HTTP en JSON"
-@RequestMapping("/api/clients")    // Toutes les routes commencent par /api/clients
-@CrossOrigin(origins = "*")        // Autorise Angular à appeler cette API
+@RestController
+@RequestMapping("/api/clients")
+@CrossOrigin(origins = "*")
 public class ClientController {
 
     @Autowired
     private ClientService clientService;
 
-    // GET http://localhost:8080/api/clients
     @GetMapping
     public List<Client> getAllClients() {
         return clientService.getAllClients();
     }
 
-    // GET http://localhost:8080/api/clients/1
     @GetMapping("/{id}")
     public ResponseEntity<Client> getClientById(@PathVariable Long id) {
         return clientService.getClientById(id)
@@ -29,15 +31,30 @@ public class ClientController {
             .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST http://localhost:8080/api/clients
     @PostMapping
-    public Client createClient(@RequestBody Client client) {
-        return clientService.saveClient(client);
+    public ResponseEntity<?> createClient(@Valid @RequestBody Client client,
+                                           BindingResult result) {
+        if (result.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(e ->
+                errors.put(e.getField(), e.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
+        return ResponseEntity.ok(clientService.saveClient(client));
     }
 
-    // PUT http://localhost:8080/api/clients/1
     @PutMapping("/{id}")
-    public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client client) {
+    public ResponseEntity<?> updateClient(@PathVariable Long id,
+                                           @Valid @RequestBody Client client,
+                                           BindingResult result) {
+        if (result.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(e ->
+                errors.put(e.getField(), e.getDefaultMessage())
+            );
+            return ResponseEntity.badRequest().body(errors);
+        }
         return clientService.getClientById(id)
             .map(existing -> {
                 client.setId(id);
@@ -46,7 +63,6 @@ public class ClientController {
             .orElse(ResponseEntity.notFound().build());
     }
 
-    // DELETE http://localhost:8080/api/clients/1
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClient(@PathVariable Long id) {
         clientService.deleteClient(id);
